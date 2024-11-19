@@ -21,6 +21,9 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
+import { useDispatch } from "react-redux";
+import { addToCard } from "../../Slices/AddToCart/AddToSlice";
+import AddToCard from "../AddToCart/AddToCart";
 
 function HeroSection() {
   const [cartList, setcartList] = useState([]);
@@ -31,6 +34,8 @@ function HeroSection() {
   const [isLording, setIsLording] = useState(false);
   const [categoryOption, setCategoryOption] = useState([]);
   const [categoryFilter, setCategoryFilter] = useState({});
+
+  const dispatch = useDispatch()
 
   console.log(isLording, "products");
 
@@ -184,9 +189,7 @@ function HeroSection() {
                         <Tooltip title="Add to Cart">
                           <AddShoppingCartIcon
                             className=" my-3 fs-2"
-                            onClick={() => {
-                              cartHandler(product);
-                            }}
+                            onClick={ () => dispatch(addToCard())}
                           />
                         </Tooltip>
                       </Box>

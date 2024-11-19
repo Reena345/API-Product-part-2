@@ -12,9 +12,14 @@ import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
+// import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import AddToCard from '../AddToCart/AddToCart';
+import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+// import { Link } from 'react-router-dom';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -46,7 +51,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
-    
+    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
     width: '100%',
@@ -59,6 +64,14 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+const count = useSelector((state)=>state.counter)
+console.log(count);
+
+
+  const [open, setOpen] = React.useState(false);
+  const toggleDrawer = (newOpen) => () => {
+    setOpen(newOpen);
+  };
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -98,7 +111,9 @@ export default function Header() {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+      <Link to="/sign-in">My account</Link>
+      </MenuItem>
     </Menu>
   );
 
@@ -122,10 +137,10 @@ export default function Header() {
       <MenuItem>
         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={4} color="error">
-            <MailIcon />
+            <ShoppingCartIcon onClick={toggleDrawer(true)} />
           </Badge>
         </IconButton>
-        <p>Messages</p>
+        <p>Add to cart</p>
       </MenuItem>
       <MenuItem>
         <IconButton
@@ -187,8 +202,8 @@ export default function Header() {
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="error">
-                <MailIcon />
+              <Badge badgeContent={count?.value} color="error">
+                <ShoppingCartIcon onClick={toggleDrawer(true)} />
               </Badge>
             </IconButton>
             <IconButton
@@ -228,6 +243,7 @@ export default function Header() {
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
+      <AddToCard open={open} toggleDrawer={toggleDrawer}/>
     </Box>
   );
 }
