@@ -21,9 +21,12 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCard } from "../../Slices/AddToCart/AddToSlice";
 import AddToCard from "../AddToCart/AddToCart";
+import { addProduct } from "../../Slices/Products/products";
+import { ToastContainer, toast } from 'react-toastify';
+
 
 function HeroSection() {
   const [cartList, setcartList] = useState([]);
@@ -35,9 +38,10 @@ function HeroSection() {
   const [categoryOption, setCategoryOption] = useState([]);
   const [categoryFilter, setCategoryFilter] = useState({});
 
+  const{isToast}=useSelector((state)=> state.products)
   const dispatch = useDispatch()
-
-  console.log(isLording, "products");
+  
+  console.log(isToast, "toast");
 
   const cartHandler = (product) => {
     const isExist = cartList.find((cart) => cart.id === product.id);
@@ -92,10 +96,17 @@ function HeroSection() {
   setProducts(filterProduct);
   console.log(filterProduct);
   
-  },[categoryFilter])
+  },[categoryFilter]);
+  useEffect(()=>{
+    if (isToast) {
+      toast("Product already added!")
+    }
+  },[isToast])
 
   return (
     <>
+   
+     <ToastContainer />
      <Autocomplete className="mt-5 ms-4"
      size="small"
    disablePortal
@@ -141,6 +152,7 @@ function HeroSection() {
         <Box className=" mx-3 px-3">
           <Grid container className="container text-center">
             {products?.map((product, index) => {
+             
               return (
                 <Grid item xs={12} sm={6} md={4} xl={3} mb={3}>
                   <Card
@@ -189,7 +201,7 @@ function HeroSection() {
                         <Tooltip title="Add to Cart">
                           <AddShoppingCartIcon
                             className=" my-3 fs-2"
-                            onClick={ () => dispatch(addToCard())}
+                            onClick={ () => dispatch(addProduct(product))}
                           />
                         </Tooltip>
                       </Box>

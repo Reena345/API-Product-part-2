@@ -1,19 +1,16 @@
-import { Typography } from "@mui/material";
+import { Button, ButtonGroup, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
-import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import { decreaseQuantity, increaseQuantity } from "../../Slices/Products/products";
 
 const AddToCard = (props) => {
   const { open, toggleDrawer } = props;
 
-  const [cartItems, setCartItem] = useState([]);
-  console.log(cartItems);
-
-  useEffect(() => {
-    const carItemArr = localStorage.getItem("cartList");
-    const parseCart = JSON.parse(carItemArr);
-    setCartItem(parseCart);
-  }, []);
+  const { items } = useSelector((state) => state.products);
+  const dispatch =useDispatch();
 
   return (
     <div>
@@ -21,31 +18,50 @@ const AddToCard = (props) => {
         <Box
           sx={{ width: 450 }}
           role="presentation"
-          onClick={toggleDrawer(false)}
         >
-           <Box>
-           <Typography sx={{backgroundColor:'#006ca8' ,color:'white' ,padding:'10px 0px'}} variant='h4' >Cart List</Typography>
-          {cartItems?.map((item) => {
-            return (
-            
-            
-              <Box
-                sx={{ display: "flex" }}
-                key={item.id}
-                style={{ width: "500px", margin: "20px" }}
-              >
-                
-                <img className="w-25 me-3" src={item.img} alt="" />
-                <Box>
-                  <h5>{item.name}</h5>
-                  <h6>{item.price}</h6>
-                  <span>{item.title}</span>
+          <Box>
+            <Typography
+              sx={{
+                backgroundColor: "#006ca8",
+                color: "white",
+                padding: "10px 0px",
+              }}
+              variant="h4"
+            >
+              Cart List
+            </Typography>
+            {items?.map((item) => {
+              return (
+                <Box
+                  sx={{ display: "flex" }}
+                  key={item.id}
+                  style={{ width: "400px" }}
+                  className="mt-1"
+                >
+                  <Box className="d-flex justify-content-between align-items-center mx-1">
+                    <div>
+                      <img
+                        style={{ width: "15%" }}
+                        src={item?.image}
+                        alt="Product-image"
+                      />
+                      <span>
+                        {item?.title?.length >= 15
+                          ? `${item?.title?.slice(0, 15)}...`
+                          : item?.title}
+                      </span>
+                    </div>
+                    <ButtonGroup size="small" variant="text" aria-label="Basic button group">
+                      <Button><RemoveIcon onClick={()=> dispatch(decreaseQuantity(item))}/></Button>
+                      <Button>{item?.quantity}</Button>
+                      <Button><AddIcon onClick={()=> dispatch(increaseQuantity(item))}/></Button>
+                    </ButtonGroup>
+                    <span>{item?.price}</span>
+                  </Box>
                 </Box>
-              </Box>
-             
-            );
-          })}
-        </Box>
+              );
+            })}
+          </Box>
         </Box>
       </Drawer>
     </div>
