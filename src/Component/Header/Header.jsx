@@ -64,8 +64,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-const count = useSelector((state)=>state.counter)
-console.log(count);
+const {items} = useSelector((state)=>state.products)
 
 
   const [open, setOpen] = React.useState(false);
@@ -202,7 +201,7 @@ console.log(count);
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={count?.value} color="error">
+              <Badge badgeContent={items?.length} color="error">
                 <ShoppingCartIcon onClick={toggleDrawer(true)} />
               </Badge>
             </IconButton>
